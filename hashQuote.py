@@ -7,10 +7,7 @@ def hash_table(size):
 
 # Hash function use first word of the quote
 def hash_function(key, size):
-    words = key.split()  # split quote into words
-    if len(words) == 0:
-        return 0
-    return hash(words[0]) % size  # hash first word only
+    return len(key.split()) %size
 
 # Insert into linked list hash table
 def insert(table, key, value, collisions):
@@ -57,7 +54,7 @@ end = time.time()  #end time
 
 
 
-print("Attempt 1: Hash Table 2 Movie Quotes as key")
+print("Attempt 2: Hash Table 2 Movie Quotes as key")
 print("Collisions:", quote_collisions[0])
 print("Wasted Space:", wasted_space(quote_table))
 print("Construction Time:", end - start)
