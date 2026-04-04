@@ -1,60 +1,65 @@
 import time
 
 
-# Create a hash table with fixed size
-def hash_table(size):
-    return [None] * size  #empty
+# Create a hash table with linked lists 
+def create_table(size):
+    table = []
+    for _ in range(size):
+        table.append([])  # empty 
+    return table
 
-# Hash function 
-#use entire title for better distribution
+# hash function combine first char, last char, and length using strings
 def hash_function(key, size):
-    return hash(key) % size
+    if len(key) == 0:
+        return 0
+    
+    # combine first char, last char, and length as a string, then hash
+    combined = key[0] + key[-1] + str(len(key))
+    return hash(combined) % size
 
-# Insert using linear probing 
-def insert(table, key, value, collisions, used_buckets):
+# Insert key value pair into linked list table
+def insert(table, key, value, collisions):
     index = hash_function(key, len(table))
-    start_index = index #remeber starting index
-    while table[index] is not None:
-        collisions[0] += 1  # count collision since bucket is already filled
-        index = (index + 1) % len(table) # move to next bucket
-        if index == start_index:
-            print("Warning Hash table is full", key)
-            break
-    if table[index] == None:
-        table[index] = value
-        used_buckets.add(index)  # track used bucket
+    collisions[0] += len(table[index])  # count collisions 
+    table[index].append(value) #add to linked list
 
-# Count wasted space by subtracting used buckets from table size
-def wasted_space(table, used_buckets):
-    return len(table) - len(used_buckets)
+# Count wasted space
+def wasted_space(table):
+    count = 0
+    for bucket in table:
+        if len(bucket) == 0:
+            count += 1
+    return count
+
+
 
 movies = []
 
 with open("MOCK_DATA.csv", "r", errors="ignore") as file:
-    header = file.readline()  # skip header
-    title_index = header.strip().split(',').index("movie_title") # find index of title column
+    header = file.readline() # skip header
+    title_index = header.strip().split(',').index("movie_title")
     for line in file:
         columns = line.strip().split(',') # split line by comma
         title = columns[title_index]
         movies.append(title) # add title to list
 
 
-size = int(len(movies) * 1.3) # smaller table to reduce waste
-title_table = hash_table(size) #creates hash table
-title_collisions = [0]
-used_buckets = set() # track which buckets are used
 
-start = time.time()
+size = len(movies)  # keep table size same as number of movies
+title_table = create_table(size) #creates hash table
+title_collisions = [0] #collisions counter
+
+start = time.time() #starts time
 
 for title in movies:
-    insert(title_table, title, title, title_collisions, used_buckets) #inserts title into hash table 
+    insert(title_table, title, title, title_collisions) #inserts title into hash table 
 
-end = time.time()
-
-
+end = time.time() #end time
 
 
-print("Attempt 4 - Movie Title as Key Hash Table")
+
+print("Attempt 5 - Movie Title as Key Hash Table")
+
 print("Collisions:", title_collisions[0])
-print("Wasted Space:", wasted_space(title_table, used_buckets))
+print("Wasted Space:", wasted_space(title_table))
 print("Construction Time:", end - start)
