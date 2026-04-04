@@ -1,26 +1,38 @@
 import time
 
 
-# Create hash table linked list
+# Create hash table linear probing
 def hash_table(size):
-    return [[] for _ in range(size)]  # each bucket is a list
+    return [None] *size   # empty bucket 
 
-# Hash function use first word of the quote
+# Hash function use last word of the quote
 def hash_function(key, size):
-    return len(key.split()) %size
+    words = key.split()
+    if len(words) == 0:
+        return 0
+    return hash(words[-1]) % size
 
-# Insert into linked list hash table
+
+# Insert using linear probing
 def insert(table, key, value, collisions):
-    index = hash_function(key, len(table)) # find bucket
-    for item in table[index]:  # count collisions
+    index = hash_function(key, len(table))
+    start_index = index  # track starting position
+
+    while table[index] is not None: # collision moves forward
         collisions[0] += 1
-    table[index].append(value) # insert into bucket
+        index = (index + 1) % len(table) # next bucket
+        if index == start_index: # table full
+            print("Warning Hash table full", key)
+            break
+    if table[index] is None:  # insert if empty
+        table[index] = value
+
 
 # Count empty buckets (wasted space)
 def wasted_space(table):
     count = 0
     for bucket in table:
-        if len(bucket) == 0:
+        if bucket == None:
             count += 1
     return count
 
@@ -54,7 +66,7 @@ end = time.time()  #end time
 
 
 
-print("Attempt 2: Hash Table 2 Movie Quotes as key")
+print("Attempt 3: Hash Table 2 Movie Quotes as key")
 print("Collisions:", quote_collisions[0])
 print("Wasted Space:", wasted_space(quote_table))
 print("Construction Time:", end - start)
