@@ -5,12 +5,9 @@ import time
 def hash_table(size):
     return [None] *size   # empty bucket 
 
-# Hash function use last word of the quote
+# Hash function full quote
 def hash_function(key, size):
-    words = key.split()
-    if len(words) == 0:
-        return 0
-    return hash(words[-1]) % size
+    return hash(key) % size #use entire string for hash
 
 
 # Insert using linear probing
@@ -66,7 +63,7 @@ end = time.time()  #end time
 
 
 
-print("Attempt 3: Hash Table 2 Movie Quotes as key")
+print("Attempt 4: Hash Table 2 Movie Quotes as key")
 print("Collisions:", quote_collisions[0])
 print("Wasted Space:", wasted_space(quote_table))
 print("Construction Time:", end - start)
