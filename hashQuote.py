@@ -8,16 +8,21 @@ def hash_table(size):
 # Hash function full quote
 def hash_function(key, size):
     return hash(key) % size #use entire string for hash
-
+def hash_function_2(key, size):
+    return 1 + (hash(key[::-1]) % (size - 1)) #reverse string
 
 # Insert using linear probing
 def insert(table, key, value, collisions):
-    index = hash_function(key, len(table))
+    size = len(table)
+    index = hash_function(key, size)
+    index2 = hash_function_2(key, size)
     start_index = index  # track starting position
+    i = 0 #num of probes 
 
     while table[index] is not None: # collision moves forward
         collisions[0] += 1
-        index = (index + 1) % len(table) # next bucket
+        i += 1 
+        index = (hash_function(key, size) + i * index2) % size
         if index == start_index: # table full
             print("Warning Hash table full", key)
             break
@@ -48,7 +53,7 @@ with open("MOCK_DATA.csv", "r", errors="ignore") as file:
 
 
 
-size = len(quotes) * 2 # table size
+size = int(len(quotes) * 1.5) # table size
 quote_table = hash_table(size)
 quote_collisions = [0]
 
@@ -63,7 +68,7 @@ end = time.time()  #end time
 
 
 
-print("Attempt 4: Hash Table 2 Movie Quotes as key")
+print("Attempt 5: Hash Table 2 Movie Quotes as key")
 print("Collisions:", quote_collisions[0])
 print("Wasted Space:", wasted_space(quote_table))
 print("Construction Time:", end - start)
