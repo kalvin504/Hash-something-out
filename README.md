@@ -5,7 +5,7 @@
 **Files:**  
 - `hashTitle.py` — Hash Table 1: Movie Title as Key  
 - `hashQuote.py` — Hash Table 2: Movie Quote as Key  
-
+-  images folder — All 10 pictures.  
 ---
 
 ## Reflection
